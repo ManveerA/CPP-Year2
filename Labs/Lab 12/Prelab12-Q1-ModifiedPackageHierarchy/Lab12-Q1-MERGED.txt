@@ -1,0 +1,252 @@
+//Package.h
+#ifndef PACKAGE_H
+#define PACKAGE_H
+
+#include <string>
+
+class Package {
+public:
+	Package(const std::string&, const std::string&, const std::string&, const std::string&,
+		const std::string&, const std::string&, const std::string&, const std::string&,
+		const std::string&, const std::string&, double = 0.0, double = 0.0);
+	virtual ~Package() {}; // virtual destructor
+
+	double getWeight();
+	double getCostByWeight();
+
+	std::string getNameR();
+	std::string getAddressR();
+	std::string getCityR();
+	std::string getStateR();
+	std::string getZipCodeR();
+	std::string getNameS();
+	std::string getAddressS();
+	std::string getCityS();
+	std::string getStateS();
+	std::string getZipCodeS();
+
+	virtual double calculateCost(); // virtual
+
+private:
+	std::string name_R;
+	std::string address_R;
+	std::string city_R;
+	std::string state_R;
+	std::string zipCode_R;
+	std::string name_S;
+	std::string address_S;
+	std::string city_S;
+	std::string state_S;
+	std::string zipCode_S;
+	double weightInOunces;
+	double costPerOunce;
+};
+#endif // !PACKAGE_H
+
+
+
+//Package.cpp
+#include "Package.h"
+
+Package::Package(const std::string& _name_R, const std::string& _address_R,
+	const std::string& _city_R, const std::string& _state_R, const std::string& _zipCode_R,
+	const std::string& _name_S, const std::string& _address_S, const std::string& _city_S,
+	const std::string& _state_S, const std::string& _zipCode_S,
+	double weight, double costPer) {
+
+	name_R = _name_R;
+	address_R = _address_R;
+	city_R = _city_R;
+	state_R = _state_R;
+	zipCode_R = _zipCode_R;
+	name_S = _name_S;
+	address_S = _address_S;
+	city_S = _city_S;
+	state_S = _state_S;
+	zipCode_S = _zipCode_S;
+	weightInOunces = weight;
+	costPerOunce = costPer;
+}
+
+double Package::calculateCost() {
+	double cost = weightInOunces * costPerOunce;
+	return cost;
+}
+
+double Package::getWeight() {
+	return weightInOunces;
+}
+
+double Package::getCostByWeight() {
+	return costPerOunce;
+}
+
+std::string Package::getNameR() {
+	return name_R;
+}
+
+std::string Package::getNameS() {
+	return name_S;
+}
+
+std::string Package::getAddressR() {
+	return address_R;
+}
+
+std::string Package::getAddressS() {
+	return address_S;
+}
+
+std::string Package::getCityR() {
+	return city_R;
+}
+
+std::string Package::getCityS() {
+	return city_S;
+}
+
+std::string Package::getStateR() {
+	return state_R;
+}
+
+std::string Package::getStateS() {
+	return state_S;
+}
+
+std::string Package::getZipCodeR() {
+	return zipCode_R;
+}
+
+std::string Package::getZipCodeS() {
+	return zipCode_S;
+}
+
+
+
+//TwoDayPackage.h
+#ifndef TWODAYPACKAGE_H
+#define TWODAYPACKAGE_H
+
+#include "Package.h"
+
+class TwoDayPackage : public Package {
+public:
+	TwoDayPackage(const std::string&, const std::string&, const std::string&, const std::string&,
+		const std::string&, const std::string&, const std::string&, const std::string&,
+		const std::string&, const std::string&, double = 0.0, double = 0.0, double = 0.0);
+	virtual ~TwoDayPackage() {};
+
+	virtual double calculateCost() override;
+
+private:
+	double flatFee;
+};
+#endif // !TWODAYPACKAGE_H
+
+
+
+//TwoDayPackage.cpp
+#include "TwoDayPackage.h"
+
+TwoDayPackage::TwoDayPackage(const std::string& _name_R, const std::string& _address_R,
+	const std::string& _city_R, const std::string& _state_R, const std::string& _zipCode_R,
+	const std::string& _name_S, const std::string& _address_S, const std::string& _city_S,
+	const std::string& _state_S, const std::string& _zipCode_S,
+	double weight, double costPer, double fee)
+	: Package(_name_R, _address_R, _city_R, _state_R, _zipCode_R, _name_S, _address_S,
+		_city_S, _state_S, _zipCode_S, weight, costPer) {
+	flatFee = fee;
+}
+
+double TwoDayPackage::calculateCost() {
+	double cost = Package::calculateCost() + flatFee;
+	return cost;
+}
+
+
+
+//OvernightPackage.h
+#ifndef OVERNIGHTPACKAGE_H
+#define OVERNIGHTPACKAGE_H
+
+#include "Package.h"
+
+class OvernightPackage : public Package {
+public:
+	OvernightPackage(const std::string&, const std::string&, const std::string&, const std::string&,
+		const std::string&, const std::string&, const std::string&, const std::string&,
+		const std::string&, const std::string&, double = 0.0, double = 0.0, double = 0.0);
+	virtual ~OvernightPackage() {};
+
+	virtual double calculateCost() override;
+
+private:
+	double nightCost;
+};
+#endif // !OVERNIGHTPACKAGE_H
+
+
+
+//OvernightPackage.cpp
+#include "OvernightPackage.h"
+
+OvernightPackage::OvernightPackage(const std::string& _name_R, const std::string& _address_R,
+	const std::string& _city_R, const std::string& _state_R, const std::string& _zipCode_R,
+	const std::string& _name_S, const std::string& _address_S, const std::string& _city_S,
+	const std::string& _state_S, const std::string& _zipCode_S,
+	double weight, double costPer, double night)
+	: Package(_name_R, _address_R, _city_R, _state_R, _zipCode_R, _name_S, _address_S,
+		_city_S, _state_S, _zipCode_S, weight, costPer) {
+	nightCost = night;
+}
+
+double OvernightPackage::calculateCost() {
+	double cost = getWeight() * (getCostByWeight() + nightCost);
+	return cost;
+}
+
+
+
+//Lab12-Q1.cpp
+#include <iostream>
+#include <iomanip>
+#include "Package.h"
+#include "TwoDayPackage.h"
+#include "OvernightPackage.h"
+#include <vector>
+using namespace std;
+
+int main()
+{
+	std::cout << std::fixed << std::setprecision(2);
+
+	Package package1("Michael Scott", "15 Dunder Mifflin Street", "Scranton", "PA", "55555",
+		"Dwight Schrute", "20 Beet Lane", "Beetville", "PA", "11111", 5, 2.2);
+
+	TwoDayPackage package2("Jim Halpert", "10 Normal Road", "Philadelphia", "PA", "22222",
+		"Pam Halpert", "25 Art Avenue", "New York", "NY", "12345", 5, 2.2, 5);
+
+	OvernightPackage package3("Stanley Hudson", "50 Vacation Street", "Miami", "FL", "77777",
+		"Phyllis Vance", "40 Ordinary Lane", "Scranton", "PA", "99999", 5, 2.2, 1.5);
+
+	std::vector<Package*>vectorOfPackages(3);
+	vectorOfPackages[0] = &package1;
+	vectorOfPackages[1] = &package2;
+	vectorOfPackages[2] = &package3;
+
+	double totalCost = 0;
+
+	for (int i = 0; i < vectorOfPackages.size(); i++) {
+		std::cout << "Package " << i + 1 << "\n\nSender:\n" << vectorOfPackages[i]->getNameS() << "\n"
+			<< vectorOfPackages[i]->getAddressS() << "\n" << vectorOfPackages[i]->getCityS()
+			<< ", " << vectorOfPackages[i]->getStateS() << " " << vectorOfPackages[i]->getZipCodeS()
+			<< "\n" << std::endl;
+		std::cout << "Recipient:\n" << vectorOfPackages[i]->getNameR() << "\n" 
+			<< vectorOfPackages[i]->getAddressR() << "\n" << vectorOfPackages[i]->getCityR()
+			<< ", " << vectorOfPackages[i]->getStateR() << " " << vectorOfPackages[i]->getZipCodeR()
+			<< "\n" << std::endl;
+		std::cout << "Cost: $" << vectorOfPackages[i]->calculateCost() << "\n" << std::endl;
+		totalCost += vectorOfPackages[i]->calculateCost();
+	}
+	std::cout << "Total shipping cost: $" << totalCost << std::endl;
+}

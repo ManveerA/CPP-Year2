@@ -1,0 +1,149 @@
+//CarbonFootprint.h
+#ifndef CARBONFOOTPRINT_H
+#define CARBONFOOTPRINT_H
+
+class CarbonFootprint {
+public:
+	virtual double getCarbonFootprint() = 0;
+};
+
+#endif // !CARBONFOOTPRINT_H
+
+
+
+//Car.h
+#ifndef CAR_H
+#define CAR_H
+#include "CarbonFootprint.h"
+
+class Car :public CarbonFootprint {
+public:
+	Car(double, double);
+	virtual ~Car() {};
+
+	virtual double getCarbonFootprint() override;
+
+private:
+	double milage;
+	double gas;
+};
+
+#endif // !CAR_H
+
+
+
+//Car.cpp
+#include "Car.h"
+#include <iostream>
+
+Car::Car(double m, double g) {
+	milage = m;
+	gas = g;
+}
+
+double Car::getCarbonFootprint() {
+	std::cout << "Car that has used " << gas << " gallons of gas and has a milage of " << milage
+		<< ": " << milage * gas;
+	return milage * gas;
+}
+
+
+
+//Building.h
+#ifndef BUILDING_H
+#define BUILDING_H
+#include "CarbonFootprint.h"
+
+class Building :public CarbonFootprint {
+public:
+	Building(double, double);
+	virtual ~Building() {};
+
+	virtual double getCarbonFootprint() override;
+
+private:
+	double height;
+	double capacity;
+};
+
+#endif // !BUILDING_H
+
+
+
+//Building.cpp
+#include "Building.h"
+#include <iostream>
+
+Building::Building(double h, double c) {
+	height = h;
+	capacity = c;
+}
+
+double Building::getCarbonFootprint() {
+	std::cout << "Building at height of " << height << " metres and a capacity of " << capacity
+		<< " people: " << height * capacity;
+	return height * capacity;
+}
+
+
+
+//Bicycle.h
+#ifndef BICYCLE_H
+#define BICYCLE_H
+#include "CarbonFootprint.h"
+
+class Bicycle :public CarbonFootprint {
+public:
+	Bicycle(double);
+	virtual ~Bicycle() {};
+
+	virtual double getCarbonFootprint() override;
+
+private:
+	double kilometres;
+};
+
+#endif // !BICYCLE_H
+
+
+
+//Bicycle.cpp
+#include "Bicycle.h"
+#include <iostream>
+
+Bicycle::Bicycle(double k) {
+	kilometres = k;
+}
+
+double Bicycle::getCarbonFootprint() {
+	std::cout << "Bicycle: " << 0.21 * kilometres;
+	return 0.21 * kilometres;
+}
+
+
+
+//Lab12-Q4.cpp
+#include <iostream>
+#include "CarbonFootprint.h"
+#include "Car.h"
+#include "Building.h"
+#include "Bicycle.h"
+#include <vector>
+using namespace std;
+
+int main()
+{
+    Car car(80, 5);
+    Building building(30, 300);
+    Bicycle bicycle(30);
+
+    std::vector<CarbonFootprint*>vectorOfObjects(3);
+    vectorOfObjects[0] = &car;
+    vectorOfObjects[1] = &building;
+    vectorOfObjects[2] = &bicycle;
+
+    for (int i = 0; i < vectorOfObjects.size(); i++) {
+        vectorOfObjects[i]->getCarbonFootprint();
+        std::cout << "\n\n";
+    }
+}
