@@ -1,0 +1,47 @@
+#pragma once
+#include <string>
+
+class Account {
+public:
+	Account(int initialAccountBalance, std::string accountName)
+	{
+		accountBalance = initialAccountBalance;
+		if (accountBalance < 0) {
+			accountBalance = 0;
+			std::cout << "Initial balance was invalid; setting to 0." << std::endl;
+		}
+		name = accountName;
+	}
+	// member function that sets the account name in the object
+	void setName(std::string accountName) {
+		name = accountName; // store the account name           
+	}
+
+	// member function that retrieves the account name from the object       
+	std::string getName() const {
+		return name; // return name's value to this function's caller
+	}
+	// member function that adds amount to balance in the object
+	void credit(int addAmount) {
+		accountBalance = accountBalance + addAmount;
+
+	}
+	// member function that removes amount from balance in the object
+	void debit(int withdrawAmount) {
+		if (withdrawAmount <= accountBalance) {
+			accountBalance = accountBalance - withdrawAmount;
+		}
+		if (withdrawAmount > accountBalance) {
+			std::cout << "Debit amount exceeded account balance." << std::endl;
+		}
+
+	}
+	// member function that displays balance in the object
+	int getBalance() {
+		return accountBalance;
+	}
+
+private:
+	int accountBalance; // data member containing account balance
+	std::string name; // data member containing account holder's name
+};
