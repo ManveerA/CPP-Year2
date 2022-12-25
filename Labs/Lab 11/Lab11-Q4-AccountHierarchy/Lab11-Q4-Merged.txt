@@ -1,0 +1,172 @@
+//Account.h
+#include <iostream>
+#ifndef ACCOUNT_H
+#define ACCOUNT_H
+
+class Account {
+public:
+	Account(double = 0.0);
+	void credit(double);
+	bool debit(double);
+	double getBalance();
+
+private:
+	double balance;
+};
+#endif // !ACCOUNT_H
+
+
+
+//Account.cpp
+#include "Account.h"
+
+Account::Account(double bal) {
+	if (bal >= 0) {
+		balance = bal;
+	}
+	else {
+		std::cout << "Balance cannot be less than 0.0. Setting to 0.0." << std::endl;
+		balance = 0;
+	}
+}
+
+void Account::credit(double deposit) {
+	balance += deposit;
+}
+
+bool Account::debit(double withdraw) {
+	if (balance >= withdraw) {
+		balance -= withdraw;
+		return true;
+	}
+	else {
+		std::cout << "Debit amount exceeded account balance." << std::endl;
+		return false;
+	}
+}
+
+double Account::getBalance() {
+	return balance;
+}
+
+
+
+//SavingsAccount.h
+#include "Account.h"
+#ifndef SAVINGSACCOUNT_H
+#define SAVINGSACCOUNT_H
+
+class SavingsAccount : public Account {
+public:
+	SavingsAccount(double = 0.0, double = 0.0);
+	double calculateInterest();
+private:
+	double balance;
+	double interestRate;
+};
+#endif // !SAVINGSACCOUNT_H
+
+
+
+//SavingsAccount.cpp
+#include "SavingsAccount.h"
+
+SavingsAccount::SavingsAccount(double bal, double iRate) : Account(bal) {
+	interestRate = iRate;
+}
+
+double SavingsAccount::calculateInterest() {
+	return interestRate * Account::getBalance();
+}
+
+
+
+//ChequingAccount.h
+#include "Account.h"
+#ifndef CHEQUINGACCOUNT_H
+#define CHEQUINGACCOUNT_H
+
+class ChequingAccount : public Account {
+public:
+	ChequingAccount(double = 0.0, double = 1);
+	void credit(double);
+	void debit(double);
+private:
+	double balance;
+	double transactionFee;
+};
+#endif // !CHEQUINGACCOUNT_H
+
+
+
+//ChequingAccount.cpp
+#include "ChequingAccount.h"
+
+ChequingAccount::ChequingAccount(double bal, double fee) : Account(bal) {
+	transactionFee = fee;
+}
+
+void ChequingAccount::credit(double deposit) {
+	Account::credit(deposit);
+	Account::credit(-1 * transactionFee);
+	std::cout << "$" << transactionFee << " transaction fee charged." << std::endl;
+}
+
+void ChequingAccount::debit(double withdraw) {
+	if (Account::debit(withdraw)) {
+		Account::credit(-1 * transactionFee);
+		std::cout << "$" << transactionFee << " transaction fee charged" << std::endl;
+	}
+}
+
+
+
+//Lab11-Q4.cpp
+#include <iostream>
+#include <iomanip>
+#include "SavingsAccount.h"
+#include "ChequingAccount.h"
+using namespace std;
+
+int main()
+{
+	std::cout << fixed << setprecision(2);
+	Account account1(25);
+	SavingsAccount account2(25, 0.03);
+	ChequingAccount account3(80, 1.00);
+
+	std::cout << "Account 1 is an Account object" << std::endl;
+	std::cout << "Account 2 is a SavingsAccount object" << std::endl; 
+	std::cout<<"Account 3 is a ChequingAccount object" << std::endl;
+
+	std::cout << "\nAccount 1 Balance: $" << account1.getBalance() << std::endl;
+	std::cout << "Account 2 Balance: $" << account2.getBalance() << std::endl;
+	std::cout << "Account 3 Balance: $" << account3.getBalance() << std::endl;
+
+	std::cout << "\nAttempting to debit $30.00 from Account 2" << std::endl;
+	account2.debit(30);
+
+	std::cout << "\nAttempting to debit $40.00 from Account 3" << std::endl;
+	account3.debit(40);
+
+	std::cout << "\nAccount 1 Balance: $" << account1.getBalance() << std::endl;
+	std::cout << "Account 2 Balance: $" << account2.getBalance() << std::endl;
+	std::cout << "Account 3 Balance: $" << account3.getBalance() << std::endl;
+
+	std::cout << "\nCrediting $40.00 to Account 1" << std::endl;
+	account1.credit(40);
+
+	std::cout << "\nCrediting $65.00 to Account 2" << std::endl;
+	account2.credit(65);
+
+	std::cout << "\nCrediting $20.00 to Account 3" << std::endl;
+	account3.credit(20);
+
+	std::cout << "\nAccount 1 Balance: $" << account1.getBalance() << std::endl;
+	std::cout << "Account 2 Balance: $" << account2.getBalance() << std::endl;
+	std::cout << "Account 3 Balance: $" << account3.getBalance() << std::endl;
+
+	std::cout << "\nAdding $" << account2.calculateInterest() << " interest to Account 2" << std::endl;
+	account2.credit(account2.calculateInterest());
+	std::cout << "\nAccount 2 Balance: $" << account2.getBalance() << std::endl;
+}
